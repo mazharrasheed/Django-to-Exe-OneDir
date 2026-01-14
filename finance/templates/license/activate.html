@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Activate License</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .license-box {
+            background: #ffffff;
+            padding: 30px;
+            width: 380px;
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .license-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2563eb;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e40af;
+        }
+
+        .error {
+            color: #dc2626;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+<div class="license-box">
+    <h2>License Activation</h2>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input
+            type="text"
+            name="license_key"
+            placeholder="Enter your license key"
+            required
+        >
+        <button type="submit">Activate</button>
+    </form>
+
+    <div class="footer">
+        Contact support if you do not have a license.
+    </div>
+</div>
+
+</body>
+</html>
