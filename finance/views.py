@@ -429,7 +429,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Allow filtering by project via URL: /api/transactions/?project_id=...
-        queryset = Transaction.objects.filter(project__is_delete=False)
+        queryset = Transaction.objects.filter(project__is_deleted=False)
         project_id = self.request.query_params.get('project_id')
         if project_id:
             queryset = queryset.filter(project_id=project_id)

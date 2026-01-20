@@ -11,6 +11,9 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [react()],
       base:'/staticfiles/',
+      css: {
+        postcss: './postcss.config.js',
+      },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
@@ -19,6 +22,9 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      build: {
+        cssCodeSplit: true,
       }
     };
 });
