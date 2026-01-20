@@ -10,11 +10,10 @@ hiddenimports = (
 
 a = Analysis(
     ['run.py'],
-    pathex=['D:/Coding/djando to exe'],
+    pathex=['D:/Coding/Django-to-Exe-OneDir'],
     binaries=[],
     datas=[
-        ('hotelfinancemanager', 'hotelfinancemanager'),
-        ('finance', 'finance'),
+        
         ('templates', 'templates'),
         ('staticfiles', 'staticfiles'),
     ],
@@ -38,7 +37,7 @@ coll = COLLECT(
     exe,
     a.binaries,
     a.datas,
-    strip=False,
+    strip=True,
     upx=True,
     console=False,
     name='FinanceFlow_app',

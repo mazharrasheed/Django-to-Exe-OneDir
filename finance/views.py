@@ -417,6 +417,8 @@ class ProjectViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
+from django.db.models import Q
+        
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.filtered.all()
     serializer_class = TransactionSerializer
@@ -430,6 +432,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Allow filtering by project via URL: /api/transactions/?project_id=...
         queryset = Transaction.objects.filter(project__is_deleted=False)
+        queryset = Transaction.objects.filter(
+            Q(project__is_deleted=False) | Q(project__isnull=True)
+                                                                        )
         project_id = self.request.query_params.get('project_id')
         if project_id:
             queryset = queryset.filter(project_id=project_id)
