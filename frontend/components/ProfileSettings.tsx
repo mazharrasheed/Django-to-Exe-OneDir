@@ -50,14 +50,15 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
   const [availablePermissions, setAvailablePermissions] = useState<DjangoPermission[]>([]);
   const [isLoadingPerms, setIsLoadingPerms] = useState(true);
   const { token } = useAuth();
-
+  const [localUser ,setLocalUser]=useState(activeUser);
   const [profileData, setProfileData] = useState({
-    name: activeUser.name || '',
-    bio: activeUser.bio || '',
-    location: activeUser.location || '',
-    phoneNumber: activeUser.phoneNumber || '',
-    website: activeUser.website || '',
+    username: localUser.username || '',
+    // bio: activeUser.bio || '',
+    // location: activeUser.location || '',
+    // phoneNumber: activeUser.phoneNumber || '',
+    // website: activeUser.website || '',
   });
+  
  
   const [isUpdating, setIsUpdating] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -67,13 +68,13 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
 
   useEffect(() => {
     setProfileData({
-      name: activeUser.name || '',
-      bio: activeUser.bio || '',
-      location: activeUser.location || '',
-      phoneNumber: activeUser.phoneNumber || '',
-      website: activeUser.website || '',
+      username: localUser.username || '',
+      // bio: activeUser.bio || '',
+      // location: activeUser.location || '',
+      // phoneNumber: activeUser.phoneNumber || '',
+      // website: activeUser.website || '',
     });
-
+    
     const fetchPerms = async () => {
       try {
         const perms = await apiService.fetchAvailablePermissions();
@@ -97,7 +98,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
     };
 
     fetchPerms();
-  }, [activeUser]);
+  }, [localUser]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'cover') => {
     const file = e.target.files?.[0];
@@ -123,24 +124,57 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
     setMessage({ type: 'success', text: `${type === 'avatar' ? 'Profile picture' : 'Cover image'} removed.` });
   };
 
-  const updateUserProfile = (updates: Partial<User>) => {
-    const updatedUser = { ...activeUser, ...updates };
-    onUpdateUser(updatedUser);
-  };
+  // const updateUserProfile = (updates: Partial<User>) => {
+  //   const updatedUser = { ...activeUser, ...updates };
+  //   onUpdateUser(updatedUser);
+  // };
+
+const updateUserProfile = async (updates: Partial<User>) => {
+  if (!token) return;
+
+  setIsUpdating(true);
+  setMessage(null);
+  const activeUser_id = Number(activeUser.id);
+
+  try {
+    const updatedUser = await authService.updateProfile(token, activeUser_id, updates);
+
+    console.log("Updated user profile:", updatedUser);
+    setLocalUser(updatedUser);
+
+    // Update parent
+    onUpdateUser({
+      ...activeUser,
+      ...updatedUser,
+    });
+
+    // Update local state
+    setProfileData({
+      username: updatedUser.name ?? profileData.username,
+    });
+
+    setMessage({ type: "success", text: "Information updated!" });
+  } catch (err) {
+    setMessage({
+      type: "error",
+      text: extractApiErrorMessage(err),
+    });
+  } finally {
+    setIsUpdating(false);
+  }
+};
+
 
   const handleSaveInfo = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsUpdating(true);
     setMessage(null);
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      updateUserProfile(profileData);
-      setMessage({ type: 'success', text: 'Information updated!' });
-    } catch (err) {
-      setMessage({ type: 'error', text: 'Update failed.' });
-    } finally {
-      setIsUpdating(false);
-    }
+    await updateUserProfile(profileData);
+    setMessage({ type: "success", text: "Information updated!" });
+  } finally {
+    setIsUpdating(false);
+  }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
@@ -231,9 +265,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
             )}
           </div>
           <div className="pb-6 hidden md:block">
-            <h2 className="text-4xl font-black text-slate-800 tracking-tight">{activeUser.name || 'Ali & Company User'}</h2>
+            <h2 className="text-4xl font-black text-slate-800 tracking-tight">{localUser.username || 'Ali & Company User'}</h2>
             <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-1.5">
-              {activeUser.is_superuser ? 'Super Administrator' : `${activeUser.role || 'Personnel'} Account`}
+              {localUser.is_superuser ? 'Super Administrator' : `${localUser.role || 'Personnel'} Account`}
             </p>
           </div>
         </div>
@@ -343,18 +377,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Identity</label>
-                  <input required value={profileData.name} onChange={e => setProfileData({ ...profileData, name: e.target.value })} className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent focus:border-[var(--primary)] focus:bg-white rounded-2xl outline-none font-bold text-slate-700 transition-all" />
+                  <input required value={profileData.username} onChange={e => setProfileData({ ...profileData, username: e.target.value })} className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent focus:border-[var(--primary)] focus:bg-white rounded-2xl outline-none font-bold text-slate-700 transition-all" />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Zone / Area</label>
-                  <input value={profileData.location} onChange={e => setProfileData({ ...profileData, location: e.target.value })} className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent focus:border-[var(--primary)] focus:bg-white rounded-2xl outline-none font-bold text-slate-700 transition-all" />
-                </div>
+                
               </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Business Bio</label>
-                <textarea value={profileData.bio} onChange={e => setProfileData({ ...profileData, bio: e.target.value })} className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent focus:border-[var(--primary)] focus:bg-white rounded-2xl outline-none font-bold text-slate-700 transition-all h-32 resize-none" />
-              </div>
+             
 
               {message && (
                 setTimeout(() => { setMessage(null); }, 5000),

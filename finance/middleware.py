@@ -49,13 +49,14 @@ class LicenseMiddleware:
             "/license/activate/generate/",
             "/admin/",
             "/favicon.ico",
-            # '/static/'
+            '/staticfiles/'
         )
 
         if any(path.startswith(p) for p in EXEMPT_PATHS):
             return self.get_response(request)
 
         if not License.objects.filter(is_active=True, machine_id=self.machine_id).exists():
+            print("dfsfdsf")
             return redirect("/license/activate/")
 
         return self.get_response(request)

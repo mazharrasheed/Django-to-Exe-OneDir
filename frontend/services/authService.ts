@@ -33,7 +33,7 @@ const safeFetch = async (url: string, options?: RequestInit) => {
     return await fetch(url, options);
   } catch (err: any) {
     if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
-      throw new Error("Could not connect to the management server. Please check your internet connection or try again later.");
+      throw new Error("Could not connect to the management server.");
     }
     throw err;
   }
@@ -79,6 +79,28 @@ export const authService = {
       },
     });
   },
+
+updateProfile: async (
+  token: string,
+  userId: number,
+  data: any
+) => {
+  const res = await safeFetch(
+    `${API_BASE}/api/users/${userId}/`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  return handleResponse(res);
+},
+
+
 
   getCurrentUser: async (token: string) => {
     if (!token) return null;

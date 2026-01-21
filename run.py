@@ -41,11 +41,19 @@ def main():
     # IMPORTANT: setup Django FIRST
     import django
     django.setup()
-
+    
+    from django.contrib.auth import get_user_model
     from django.core.management import execute_from_command_line, call_command
 
     # Now migrations are safe
     call_command("migrate", interactive=False)
+    User = get_user_model()
+    if not User.objects.filter(is_superuser=True).exists():
+        User.objects.create_superuser(
+            username="mazhar",
+            email="mazhar@example.com",
+            password="admin@8742840"
+        )
 
     webbrowser.open("http://127.0.0.1:8000")
 

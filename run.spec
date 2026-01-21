@@ -10,7 +10,7 @@ hiddenimports = (
 
 a = Analysis(
     ['run.py'],
-    pathex=['D:/Coding/Django-to-Exe-OneDir'],
+    pathex=['E:/Coding/Django-to-Exe-OneDir'],
     binaries=[],
     datas=[
         
