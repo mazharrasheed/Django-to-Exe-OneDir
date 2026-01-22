@@ -42,8 +42,11 @@ def main():
     import django
     django.setup()
     
+    import socket
+    import webbrowser
     from django.contrib.auth import get_user_model
     from django.core.management import execute_from_command_line, call_command
+    from django.core.management import call_command
 
     # Now migrations are safe
     call_command("migrate", interactive=False)
@@ -55,12 +58,20 @@ def main():
             password="admin@8742840"
         )
 
-    webbrowser.open("http://127.0.0.1:8000")
+    def get_local_ip():
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            s.connect(("8.8.8.8", 80))
+            return s.getsockname()[0]
+        finally:
+            s.close()
+
+    webbrowser.open(f"http://{get_local_ip()}:8000")
 
     execute_from_command_line([
         "manage.py",
         "runserver",
-        "127.0.0.1:8000",
+        "0.0.0.0:8000",
         "--noreload",
     ])
 

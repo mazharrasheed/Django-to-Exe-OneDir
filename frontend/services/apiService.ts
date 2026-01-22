@@ -2,7 +2,8 @@
 import { Project, Transaction, User } from '../types';
 
 const PYTHON_ANYWHERE_USERNAME = 'aliandco'; 
-const API_BASE = `http://127.0.0.1:8000/api`;
+const API_BASE_URL = window.location.origin
+const API_BASE = `${API_BASE_URL}/api`;
 
 const getHeaders = () => {
   const token = localStorage.getItem('ff_token');

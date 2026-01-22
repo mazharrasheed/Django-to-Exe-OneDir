@@ -5,6 +5,8 @@ import { UserPlus, Trash2, Shield, Mail, Key, UserCheck, X, Loader2, AlertCircle
 import { apiService } from '../services/apiService';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = window.location.origin
+
 const REQUIRED_PERMISSIONS = [
   { codename: 'data_backup', name: 'Can data bckup', group: 'User Management' },
   { codename: 'add_user', name: 'Can add user', group: 'User Management' },
@@ -141,7 +143,8 @@ const UserManagement: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 {canEditUser && <button onClick={() => handleEdit(u)} className="p-3 text-slate-300 hover:text-indigo-600 transition-colors"><Edit3 size={18} /></button>}
-                {canDeleteUser && <button onClick={async () => { if (confirm("Remove user?")) { await fetch(`http://127.0.0.1:8000/api/users/${u.id}/`, { method: 'DELETE', headers: { 'Authorization': `Token ${localStorage.getItem('ff_token')}` } }); loadUsers(); } }} className="p-3 text-slate-300 hover:text-rose-600 transition-colors"><Trash2 size={18} /></button>}
+                {canDeleteUser && <button onClick={async () => { if (confirm("Remove user?")) 
+                  { await fetch(`${API_BASE_URL}/api/users/${u.id}/`, { method: 'DELETE', headers: { 'Authorization': `Token ${localStorage.getItem('ff_token')}` } }); loadUsers(); } }} className="p-3 text-slate-300 hover:text-rose-600 transition-colors"><Trash2 size={18} /></button>}
               </div>
             </div>
           ))}
