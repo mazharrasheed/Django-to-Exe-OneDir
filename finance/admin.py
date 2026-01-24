@@ -8,3 +8,7 @@ from .models import (
 admin.site.register(Project)
 admin.site.register(Transaction)  
 
+admin.site.site_header = "FinanceFlow Administration"
+admin.site.site_title = "FinanceFlow Admin"
+admin.site.index_title = "FinanceFlow System Management"
+
