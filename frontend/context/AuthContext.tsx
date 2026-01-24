@@ -82,7 +82,6 @@ export  const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const firstName = userData.first_name || userData.username || 'User';
       const lastName = userData.last_name || '';
       const rawPerms = userPermsResponse?.permissions || [];
-      console.log(rawPerms)
       const normalizedPerms = normalizePermissions(rawPerms);
 
       setUser({

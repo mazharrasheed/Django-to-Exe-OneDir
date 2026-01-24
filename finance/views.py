@@ -390,7 +390,10 @@ def list_groups(request):
 def current_user(request):
     return Response({
         'id': request.user.id,
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
         'username': request.user.username,
+        'email': request.user.email,
         'is_superuser': request.user.is_superuser
     })
 

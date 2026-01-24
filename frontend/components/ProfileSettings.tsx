@@ -53,13 +53,15 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
   const [localUser ,setLocalUser]=useState(activeUser);
   const [profileData, setProfileData] = useState({
     username: localUser.username || '',
-    // bio: activeUser.bio || '',
+    email: localUser.email || '',
+    firstname: localUser.first_name || '',
+    lastname: localUser.last_name || '',
     // location: activeUser.location || '',
     // phoneNumber: activeUser.phoneNumber || '',
     // website: activeUser.website || '',
   });
   
- 
+
   const [isUpdating, setIsUpdating] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
@@ -69,7 +71,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ activeUser, onUpdateU
   useEffect(() => {
     setProfileData({
       username: localUser.username || '',
-      // bio: activeUser.bio || '',
+      email: localUser.email || '',
+      firstname: localUser.first_name || '',
+      lastname: localUser.last_name || '',
       // location: activeUser.location || '',
       // phoneNumber: activeUser.phoneNumber || '',
       // website: activeUser.website || '',
@@ -139,7 +143,6 @@ const updateUserProfile = async (updates: Partial<User>) => {
   try {
     const updatedUser = await authService.updateProfile(token, activeUser_id, updates);
 
-    console.log("Updated user profile:", updatedUser);
     setLocalUser(updatedUser);
 
     // Update parent
@@ -151,6 +154,9 @@ const updateUserProfile = async (updates: Partial<User>) => {
     // Update local state
     setProfileData({
       username: updatedUser.name ?? profileData.username,
+      email: updatedUser.email ?? profileData.email,
+      firstname: updatedUser.first_name ?? profileData.firstname,
+      lastname: updatedUser.last_name ?? profileData.lastname,
     });
 
     setMessage({ type: "success", text: "Information updated!" });
@@ -184,8 +190,6 @@ const updateUserProfile = async (updates: Partial<User>) => {
 
     try {
       await new Promise(resolve => setTimeout(resolve, 600));
-      console.log("paswor change")
-      console.log(oldPassword, newPassword, confirmPassword)
       await authService.changePassword(token,
         {
           old_password: oldPassword,
@@ -265,7 +269,7 @@ const updateUserProfile = async (updates: Partial<User>) => {
             )}
           </div>
           <div className="pb-6 hidden md:block">
-            <h2 className="text-4xl font-black text-slate-800 tracking-tight">{localUser.username || 'Ali & Company User'}</h2>
+            <h2 className="text-4xl font-black text-slate-800 tracking-tight">{localUser.first_name  || 'Ali & Company User'} {localUser.last_name || ''}</h2>
             <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-1.5">
               {localUser.is_superuser ? 'Super Administrator' : `${localUser.role || 'Personnel'} Account`}
             </p>
@@ -368,7 +372,7 @@ const updateUserProfile = async (updates: Partial<User>) => {
           <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><Edit3 size={20} /></div>
+                {/* <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><Edit3 size={20} /></div> */}
                 <h3 className="text-xl font-black text-slate-800 tracking-tight">Personal Information</h3>
               </div>
             </div>
@@ -376,13 +380,14 @@ const updateUserProfile = async (updates: Partial<User>) => {
             <form onSubmit={handleSaveInfo} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Identity</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">User Name</label>
                   <input required value={profileData.username} onChange={e => setProfileData({ ...profileData, username: e.target.value })} className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent focus:border-[var(--primary)] focus:bg-white rounded-2xl outline-none font-bold text-slate-700 transition-all" />
                 </div>
-                
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                  <input required value={profileData.email} onChange={e => setProfileData({ ...profileData, email: e.target.value })} className="w-full px-5 py-4 bg-slate-50 border-2 border-transparent focus:border-[var(--primary)] focus:bg-white rounded-2xl outline-none font-bold text-slate-700 transition-all" />
+                </div>
               </div>
-
-             
 
               {message && (
                 setTimeout(() => { setMessage(null); }, 5000),

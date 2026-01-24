@@ -175,7 +175,6 @@ export const apiService = {
   fetchAvailablePermissions: async (): Promise<any[]> => {
     try {
       const res = await safeFetch(`${API_BASE}/users/me/permissions/`, { headers: getHeaders() });
-      console.log(res)
       const data = await handleFetchResponse(res, 'Failed to sync permissions');
       return data?.permissions || [];
     } catch (error) {

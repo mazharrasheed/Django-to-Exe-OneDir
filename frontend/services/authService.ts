@@ -2,7 +2,6 @@ import { Database } from "lucide-react";
 const API_BASE_URL = window.location.origin
 const API_BASE = `${API_BASE_URL}`;
 
-
 const handleResponse = async (res: Response) => {
   const contentType = res.headers.get("content-type");
 

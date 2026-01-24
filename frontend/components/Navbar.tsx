@@ -28,8 +28,6 @@ const Navbar: React.FC<NavbarProps> = ({
   const { updateUser, permissions } = useAuth();
   const canBackup = user?.role === 'admin' || user?.permissions.canBackup;
 
-  console.log('Navbar render - user permissions:', permissions);
-
   const cycleTheme = () => {
     if (!user) return;
     const themes: AppTheme[] = ['slate', 'indigo', 'emerald', 'rose', 'amber'];
