@@ -55,7 +55,7 @@ def main():
         User.objects.create_superuser(
             username="mazhar",
             email="mazhar@example.com",
-            password="admin@8742840"
+            password="paktel@paktel3410123"
         )
 
     def get_local_ip():
@@ -75,9 +75,16 @@ def main():
         "--noreload",
     ])
 
+    # webbrowser.open("http://127.0.0.1:8000")
+    # execute_from_command_line([
+    #     "manage.py",
+    #     "runserver",
+    #     "127.0.0.1:8000",
+    #     "--noreload",
+    # ])
 
 if __name__ == "__main__":
     main()
 
 
-# taskkill /f /im run.exe 2>nul
+# taskkill /f /im run.exe 2>nul  

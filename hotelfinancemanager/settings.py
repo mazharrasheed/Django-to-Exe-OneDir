@@ -198,31 +198,15 @@ REST_FRAMEWORK = {
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3001",
-]
+CORS_ALLOWED_ORIGINS = []
 
 
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = "Lax"
 
 # Required for local + prod
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    
-]
+CSRF_TRUSTED_ORIGINS = []
 
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
-if DEBUG:
-    CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SECURE = False
-else:
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
