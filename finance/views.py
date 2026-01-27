@@ -77,7 +77,7 @@ serializer = URLSafeSerializer(SECRET_KEY)
 def generate_license(request):
 
     oldest_user = User.objects.order_by('date_joined').first()
-    if not request.user.is_superuser and not request.user == oldest_user and not request.user.id==1:
+    if not request.user.is_superuser or not request.user == oldest_user or not request.user.id==1:
         return JsonResponse({"error": "Unauthorized"}, status=403)
     
     if request.method == "POST":
